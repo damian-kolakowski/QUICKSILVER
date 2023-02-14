@@ -12,6 +12,7 @@
 #include "driver/time.h"
 #include "flight/control.h"
 #include "flight/filter.h"
+#include "flight/sdft.h"
 #include "io/data_flash.h"
 #include "io/vtx.h"
 #include "osd/menu.h"
@@ -598,8 +599,30 @@ static void osd_display_regular() {
 
   switch (osd_state.element) {
   case OSD_CALLSIGN: {
+    extern sdft_t gyro_sdft[3];
+
     osd_start(osd_attr(el), el->pos_x, el->pos_y);
-    osd_write_str((const char *)profile.osd.callsign);
+    osd_write_uint(gyro_sdft[0].notch_hz[0], 3);
+    osd_write_char(' ');
+    osd_write_uint(gyro_sdft[0].notch_hz[1], 3);
+    osd_write_char(' ');
+    osd_write_uint(gyro_sdft[0].notch_hz[2], 3);
+
+    osd_start(osd_attr(el), el->pos_x, el->pos_y + 1);
+    osd_write_uint(gyro_sdft[1].notch_hz[0], 3);
+    osd_write_char(' ');
+    osd_write_uint(gyro_sdft[1].notch_hz[1], 3);
+    osd_write_char(' ');
+    osd_write_uint(gyro_sdft[1].notch_hz[2], 3);
+
+    osd_start(osd_attr(el), el->pos_x, el->pos_y + 2);
+    osd_write_uint(gyro_sdft[2].notch_hz[0], 3);
+    osd_write_char(' ');
+    osd_write_uint(gyro_sdft[2].notch_hz[1], 3);
+    osd_write_char(' ');
+    osd_write_uint(gyro_sdft[2].notch_hz[2], 3);
+
+    // osd_write_str((const char *)profile.osd.callsign);
 
     osd_state.element++;
     break;
@@ -638,7 +661,7 @@ static void osd_display_regular() {
 
   case OSD_GYRO_TEMP: {
     osd_start(osd_attr(el), el->pos_x, el->pos_y);
-    osd_write_int(state.gyro_temp, 4);
+    osd_write_int(state.cpu_load, 4);
     osd_write_char(ICON_CELSIUS);
 
     osd_state.element++;
