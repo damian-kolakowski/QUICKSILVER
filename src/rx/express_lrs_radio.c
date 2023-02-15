@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include "core/looptime.h"
+#include "core/scheduler.h"
 #include "util/util.h"
 
 #if defined(RX_EXPRESS_LRS)
@@ -249,7 +250,7 @@ void elrs_set_rate(uint8_t index, int32_t freq, bool invert_iq, uint32_t flrc_sy
   sx128x_set_busy_timeout(100);
 
   current_rate = index;
-  looptime_reset();
+  task_reset_runtime();
 }
 
 void elrs_enter_rx(volatile uint8_t *packet) {

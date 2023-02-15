@@ -3,6 +3,7 @@
 #include "core/profile.h"
 
 #define BLACKBOX_SCALE 1000
+#define BLACKBOX_RATE 4
 
 typedef struct {
   uint32_t loop;
@@ -32,4 +33,4 @@ cbor_result_t cbor_encode_blackbox_t(cbor_value_t *enc, const blackbox_t *b);
 
 void blackbox_init();
 void blackbox_set_debug(uint8_t index, int16_t data);
-uint8_t blackbox_update();
+void blackbox_update();

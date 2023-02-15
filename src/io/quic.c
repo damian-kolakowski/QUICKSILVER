@@ -7,6 +7,7 @@
 #include "core/debug.h"
 #include "core/flash.h"
 #include "core/profile.h"
+#include "core/scheduler.h"
 #include "driver/serial.h"
 #include "driver/serial_4way.h"
 #include "driver/spi_max7456.h"
@@ -215,7 +216,7 @@ static void get_quic(quic_t *quic, cbor_value_t *dec) {
   }
 #ifdef DEBUG
   case QUIC_VAL_PERF_COUNTERS: {
-    res = cbor_encode_perf_counters(&enc);
+    res = cbor_encode_task_stats(&enc);
     check_cbor_error(QUIC_CMD_GET);
     quic_send(quic, QUIC_CMD_GET, QUIC_FLAG_NONE, encode_buffer, cbor_encoder_len(&enc));
     break;

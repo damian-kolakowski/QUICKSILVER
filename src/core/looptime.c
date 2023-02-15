@@ -65,7 +65,8 @@ static void looptime_auto_detect() {
   }
 }
 
-void looptime_update(uint32_t time) {
+void looptime_update() {
+  const uint32_t time = time_micros();
   state.looptime_us = ((uint32_t)(time - lastlooptime));
   lastlooptime = time;
 
@@ -85,4 +86,6 @@ void looptime_update(uint32_t time) {
   if (flags.arm_state) {
     state.armtime += state.looptime;
   }
+
+  state.loop_counter++;
 }

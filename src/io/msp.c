@@ -8,11 +8,11 @@
 #include "driver/serial.h"
 #include "driver/serial_4way.h"
 #include "flight/control.h"
+#include "io/quic.h"
 #include "io/usb_configurator.h"
-#include "quic.h"
+#include "io/vtx.h"
 #include "util/crc.h"
 #include "util/util.h"
-#include "vtx.h"
 
 enum {
   MSP_REBOOT_FIRMWARE = 0,

@@ -1,12 +1,13 @@
 #include "rx/flysky.h"
 
 #if defined(RX_FLYSKY)
+#include <string.h>
+
 #include "core/flash.h"
 #include "driver/spi_a7105.h"
 #include "driver/time.h"
-#include "flight/control.h" // for state
+#include "flight/control.h"
 #include "util/util.h"
-#include <string.h>
 
 //------------------------------------------------------------------------------
 #define AFHDS_BIND_CHANNEL 0x00

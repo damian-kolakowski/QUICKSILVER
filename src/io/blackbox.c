@@ -9,9 +9,7 @@
 
 #ifdef ENABLE_BLACKBOX
 
-static uint32_t blackbox_rate = 4;
 static blackbox_t blackbox;
-
 static uint8_t blackbox_enabled = 0;
 
 cbor_result_t cbor_encode_blackbox_t(cbor_value_t *enc, const blackbox_t *b) {
@@ -60,14 +58,12 @@ void blackbox_set_debug(uint8_t index, int16_t data) {
   blackbox.debug[index] = data;
 }
 
-uint8_t blackbox_update() {
-  static uint32_t loop_counter = 0;
-
+void blackbox_update() {
   data_flash_result_t flash_result = data_flash_update();
 
   if (flash_result == DATA_FLASH_DETECT || flash_result == DATA_FLASH_STARTING) {
     // flash is still detecting, dont do anything
-    return 0;
+    return;
   }
 
   // flash is either idle or writing, do blackbox
@@ -75,19 +71,19 @@ uint8_t blackbox_update() {
   if ((!flags.arm_switch || !rx_aux_on(AUX_BLACKBOX)) && blackbox_enabled == 1) {
     data_flash_finish();
     blackbox_enabled = 0;
-    return 0;
+    return;
   } else if ((flags.arm_switch && flags.turtle_ready == 0 && rx_aux_on(AUX_BLACKBOX)) && blackbox_enabled == 0) {
-    if (data_flash_restart(blackbox_rate, state.looptime_autodetect)) {
+    if (data_flash_restart(BLACKBOX_RATE, state.looptime_autodetect)) {
       blackbox_enabled = 1;
     }
-    return 0;
+    return;
   }
 
   if (blackbox_enabled == 0) {
-    return 0;
+    return;
   }
 
-  blackbox.loop = loop_counter / blackbox_rate;
+  blackbox.loop = state.loop_counter / BLACKBOX_RATE;
   blackbox.time = time_micros();
 
   vec3_compress(&blackbox.pid_p_term, &state.pid_p_term, BLACKBOX_SCALE);
@@ -111,14 +107,9 @@ uint8_t blackbox_update() {
 
   blackbox.cpu_load = state.cpu_load;
 
-  if (blackbox_enabled != 0 && (loop_counter % blackbox_rate) == 0) {
+  if (blackbox_enabled != 0 && (state.loop_counter % BLACKBOX_RATE) == 0) {
     data_flash_write_backbox(&blackbox);
   }
-
-  loop_counter++;
-
-  // tell the rest of the code that flash is occuping the spi bus
-  return flash_result == DATA_FLASH_WRITE;
 }
 #else
 void blackbox_set_debug(uint8_t index, int16_t data) {}
