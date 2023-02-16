@@ -173,8 +173,8 @@ void sixaxis_read() {
     state.gyro.axis[i] = filter_step(profile.filter.gyro[1].type, &filter[1], &filter_state[1][i], state.gyro.axis[i]);
 
     for (uint32_t p = 0; p < SDFT_PEAKS; p++) {
-      if (i == 0) {
-        blackbox_set_debug(p, gyro_sdft[i].notch_hz[p]);
+      if (p == 0) {
+        blackbox_set_debug(i, gyro_sdft[i].notch_hz[p]);
       }
       state.gyro.axis[i] = filter_biquad_notch_step(&notch_filter[i][p], &notch_filter_state[i][p], state.gyro.axis[i]);
     }
